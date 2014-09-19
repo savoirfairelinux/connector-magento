@@ -463,11 +463,34 @@ class ProductImportMapper(ImportMapper):
     @mapping
     def website_ids(self, record):
         website_ids = []
+        company_ids = []
         binder = self.get_binder_for_model('magento.website')
         for mag_website_id in record['websites']:
             website_id = binder.to_openerp(mag_website_id)
             website_ids.append((4, website_id))
-        return {'website_ids': website_ids}
+
+            company_id = binder.session.read(binder.model._name,
+                                             website_id,
+                                             ["company_id"])["company_id"]
+            if company_id:
+                company_ids.append(company_id)
+
+        res = {'website_ids': website_ids}
+
+        if company_ids:
+            if len(company_ids) > 1:
+                raise MappingError(
+                    "The product with magento id %s cannot be "
+                    "imported because it would belong to more "
+                    "than one company, and we can't allow that." %
+                    (record.get('product_id', "N/A"), ),
+                )
+
+            res['company_id'] = company_id[0]
+        else:
+            res['company_id'] = False
+
+        return res
 
     @mapping
     def categories(self, record):

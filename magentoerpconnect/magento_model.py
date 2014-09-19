@@ -359,6 +359,10 @@ class magento_website(orm.Model):
         'product_binding_ids': fields.many2many('magento.product.product',
                                                 string='Magento Products',
                                                 readonly=True),
+        'company_id':  fields.many2one(
+            'res.company',
+            'Company',
+            help="Company to which objects imported from this store belong"),
     }
 
     _sql_constraints = [

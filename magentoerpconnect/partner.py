@@ -308,6 +308,7 @@ class PartnerImportMapper(ImportMapper):
         ('email', 'emailid'),
         ('taxvat', 'taxvat'),
         ('group_id', 'group_id'),
+        ('company_id', 'company_id'),
     ]
 
     @only_create
@@ -344,7 +345,15 @@ class PartnerImportMapper(ImportMapper):
     def website_id(self, record):
         binder = self.get_binder_for_model('magento.website')
         website_id = binder.to_openerp(record['website_id'])
-        return {'website_id': website_id}
+        res = {'website_id': website_id}
+
+        company_id = binder.session.read(binder.model._name,
+                                         website_id,
+                                         ["company_id"])["company_id"]
+        if company_id:
+            # We received (id, name)
+            res['company_id'] = company_id[0]
+        return res
 
     @mapping
     def lang(self, record):

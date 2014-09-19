@@ -64,6 +64,12 @@
                                     of the new records to review
                                     in the menu 'Connectors > Checkpoint'.
                                 </p>
+                                <p class="oe_grey oe_inline">
+                                  If you need to configure the import company
+                                  for websites in a multi-company environment,
+                                  you should first synchronize the metadata and
+                                  then configure the websites.
+                                </p>
                                 <group>
                                     <label string="Import all customer groups" class="oe_inline"/>
                                     <div>
@@ -189,6 +195,7 @@
                             <field name="sort_order"/>
                         </group>
                         <group string="Options" name="options">
+                            <field name="company_id" />
                         </group>
                         <notebook>
                             <page name="import" string="Imports">
