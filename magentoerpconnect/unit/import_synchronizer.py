@@ -219,9 +219,10 @@ class MagentoImportSynchronizer(ImportSynchronizer):
 
         # import the missing linked resources
         self._import_dependencies()
+        self._import(binding_id)
 
+    def _import(self, binding_id):
         map_record = self._map_data()
-
         if binding_id:
             record = self._update_data(map_record)
             self._update(binding_id, record)

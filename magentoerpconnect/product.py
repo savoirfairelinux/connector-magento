@@ -261,6 +261,21 @@ class ProductBatchImport(DelayedBatchImport):
         for record_id in record_ids:
             self._import_record(record_id)
 
+    def _import(self, binding_id):
+        map_record = self._map_data()
+        company_id = map_record.get("company_id")
+        user_id = None
+        if company_id:
+            company = self.session.browse('res.company', company_id)
+            if company.connector_user_id:
+                user_id = company.connector_user_id.id
+
+        if user_id:
+            with self.session.change_user(user_id):
+                super(ProductBatchImport, self)._import(binding_id)
+        else:
+            super(ProductBatchImport, self)._import(binding_id)
+
 
 @magento
 class CatalogImageImporter(ImportSynchronizer):

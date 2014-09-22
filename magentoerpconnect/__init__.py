@@ -16,3 +16,5 @@ import stock_tracking
 import payment_invoice
 
 import consumer
+
+from . import company
